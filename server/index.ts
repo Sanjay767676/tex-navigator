@@ -89,18 +89,24 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || "3000", 10);
-  if (process.env.NODE_ENV !== "production") {
-    httpServer.listen(
-      {
-        port,
-        host: "0.0.0.0",
-      },
-      () => {
-        log(`serving on port ${port}`);
-      },
-    );
-  }
+  // Auto-find a free port starting from the preferred one
+  const preferredPort = parseInt(process.env.PORT || "3000", 10);
+
+  const tryListen = (port: number) => {
+    httpServer.once("error", (err: any) => {
+      if (err.code === "EADDRINUSE") {
+        log(`Port ${port} in use, trying ${port + 1}...`);
+        tryListen(port + 1);
+      } else {
+        throw err;
+      }
+    });
+    httpServer.listen({ port, host: "0.0.0.0" }, () => {
+      log(`serving on port ${port}`);
+    });
+  };
+
+  tryListen(preferredPort);
 })();
 
 export default app;
