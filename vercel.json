@@ -2,8 +2,7 @@
   "version": 2,
   "functions": {
     "server/index.ts": {
-      "runtime": "nodejs20.x",
-      "includeFiles": "dist/public/**"
+      "runtime": "@vercel/node"
     }
   },
   "rewrites": [
