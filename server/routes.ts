@@ -156,9 +156,7 @@ export async function registerRoutes(
         { name: "Gamestrom Workshop On Game Design", category: "Workshop", description: "CST/CSD/IoT department event: Gamestrom Workshop On Game Design.", date: "13-03-2026", time: "09:00 AM", venue: "TBA soon", lat: "11.0500", lon: "77.0000" }
       ];
 
-      for (const event of sampleEvents) {
-        await storage.createEvent(event);
-      }
+      await storage.createEvents(sampleEvents);
       console.log("Database seeded successfully with all events.");
     } catch (error) {
       console.error("Error during database seeding:", error);
