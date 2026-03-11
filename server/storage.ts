@@ -1,38 +1,32 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import {
+  events,
+  type EventResponse,
+  type InsertEvent
+} from "@shared/schema";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getEvents(): Promise<EventResponse[]>;
+  getEvent(id: number): Promise<EventResponse | undefined>;
+  createEvent(event: InsertEvent): Promise<EventResponse>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getEvents(): Promise<EventResponse[]> {
+    return await db.select().from(events);
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+  async getEvent(id: number): Promise<EventResponse | undefined> {
+    const results = await db.select().from(events).where(
+      (events, { eq }) => eq(events.id, id)
     );
+    return results[0];
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async createEvent(event: InsertEvent): Promise<EventResponse> {
+    const [created] = await db.insert(events).values(event).returning();
+    return created;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
