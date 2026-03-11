@@ -2,11 +2,9 @@ import { motion } from "framer-motion";
 
 const CATEGORIES = [
   "All",
-  "Technical",
-  "Workshop",
-  "Cultural",
-  "Sports",
-  "Management"
+  "Events",
+  "Workshops",
+  "Hackathons"
 ];
 
 interface FilterChipsProps {

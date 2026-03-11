@@ -10,6 +10,13 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  // Map UI label → database category value
+  const CATEGORY_MAP: Record<string, string> = {
+    "Events": "Event",
+    "Workshops": "Workshop",
+    "Hackathons": "Hackathon",
+  };
+
   // Live filter logic
   const filteredEvents = useMemo(() => {
     return events.filter((event) => {
@@ -18,7 +25,8 @@ export default function Home() {
         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.venue.toLowerCase().includes(searchQuery.toLowerCase());
         
-      const matchesCategory = selectedCategory === "All" || event.category === selectedCategory;
+      const dbCategory = CATEGORY_MAP[selectedCategory];
+      const matchesCategory = selectedCategory === "All" || event.category === dbCategory;
       
       return matchesSearch && matchesCategory;
     });
