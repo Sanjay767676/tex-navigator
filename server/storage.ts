@@ -1,9 +1,9 @@
-import { db } from "./db";
+import { db } from "./db.js";
 import {
   events,
   type EventResponse,
   type InsertEvent
-} from "@shared/schema";
+} from "../shared/schema.js";
 
 export interface IStorage {
   getEvents(): Promise<EventResponse[]>;
