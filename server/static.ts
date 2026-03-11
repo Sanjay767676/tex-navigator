@@ -7,15 +7,27 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "public");
+  // Try multiple possible locations for the public directory
+  const possiblePaths = [
+    path.resolve(__dirname, "public"),         // dist/public (when running bundled)
+    path.resolve(__dirname, "..", "dist", "public"), // root/dist/public (when running from server/ source)
+    path.resolve(process.cwd(), "dist", "public"),   // cwd/dist/public
+    path.resolve(process.cwd(), "public"),          // legacy locations
+  ];
+
+  let distPath = possiblePaths[0];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p) && fs.existsSync(path.resolve(p, "index.html"))) {
+      distPath = p;
+      break;
+    }
+  }
+
+  console.log(`[static] Serving static files from: ${distPath}`);
   
-  // In Vercel serverless functions, we might not have a public folder 
-  // if we are serving through the Vercel edge/router, but this logic 
-  // is needed for local production-like testing.
-  if (process.env.NODE_ENV === "production" && !fs.existsSync(distPath)) {
-     // Skip error in Vercel environment where static files are handled by the router
+  if (process.env.NODE_ENV === "production" && !fs.existsSync(path.resolve(distPath, "index.html"))) {
      if (!process.env.VERCEL) {
-        throw new Error(`Could not find the build directory: ${distPath}`);
+        console.warn(`[static] WARNING: index.html not found in ${distPath}`);
      }
   }
 
@@ -23,8 +35,13 @@ export function serveStatic(app: Express) {
 
   app.get("*", (req, res, next) => {
     if (req.path.startsWith("/api")) return next();
-    res.sendFile(path.resolve(distPath, "index.html"), (err) => {
-      if (err) next();
-    });
+    
+    const indexPath = path.resolve(distPath, "index.html");
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      // If we can't find index.html, we might be in a broken build state on Vercel
+      res.status(404).send("Frontend build not found. Please ensure 'npm run build' completed successfully.");
+    }
   });
 }
