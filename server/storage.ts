@@ -1,4 +1,5 @@
 import { db } from "./db.js";
+import { eq } from "drizzle-orm";
 import {
   events,
   type EventResponse,
@@ -17,9 +18,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getEvent(id: number): Promise<EventResponse | undefined> {
-    const results = await db.select().from(events).where(
-      (events, { eq }) => eq(events.id, id)
-    );
+    const results = await db.select().from(events).where(eq(events.id, id));
     return results[0];
   }
 
