@@ -25,21 +25,17 @@ export default function Home() {
   }, [events, searchQuery, selectedCategory]);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Background Decorative Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-[10%] right-[-10%] w-[30%] h-[50%] rounded-full bg-secondary/10 blur-[120px] pointer-events-none"></div>
-
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-background">
       {/* Sticky Navbar */}
-      <nav className="sticky top-0 z-50 w-full bg-glass">
+      <nav className="sticky top-0 z-50 w-full border-b-3 border-black bg-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-foreground">
-            <Compass className="h-6 w-6 text-primary animate-pulse" />
-            <span className="font-display text-xl font-bold tracking-tight">
-              Texperia <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Navigator</span>
+          <div className="flex items-center gap-2 text-black">
+            <Compass className="h-6 w-6 text-black fill-primary" />
+            <span className="font-display text-2xl font-black uppercase tracking-tighter">
+              Texperia <span className="bg-primary px-1">Navigator</span>
             </span>
           </div>
-          <div className="rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1 text-xs font-bold tracking-widest text-secondary text-glow-secondary">
+          <div className="border-3 border-black bg-black px-4 py-1 text-xs font-black tracking-widest text-primary">
             SNSCT 2026
           </div>
         </div>
@@ -55,12 +51,12 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="font-display text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-              Find Your Event.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-secondary">Navigate Instantly.</span>
+            <h1 className="font-display text-5xl md:text-8xl font-black uppercase mb-6 leading-[0.9] tracking-tighter text-black">
+              Find Your <span className="bg-primary text-black px-2">Event.</span><br />
+              Navigate Now.
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Welcome to the official interactive map and schedule for Texperia 2026. Search, filter, and get live directions to any venue on campus.
+            <p className="text-lg md:text-xl font-bold text-black/80 mb-10 max-w-2xl mx-auto uppercase tracking-wide">
+              Official navigator for Texperia 2026. <br className="hidden md:block" /> Search and get live directions instantly.
             </p>
           </motion.div>
 
@@ -71,17 +67,16 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="relative max-w-2xl mx-auto group"
           >
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary/50 to-secondary/50 opacity-20 blur transition duration-300 group-focus-within:opacity-50"></div>
-            <div className="relative flex items-center bg-card border-2 border-border rounded-2xl overflow-hidden focus-within:border-primary/50 transition-colors">
-              <div className="pl-5 text-muted-foreground">
+            <div className="relative flex items-center bg-white border-3 border-black shadow-neo-primary focus-within:shadow-neo transition-all">
+              <div className="pl-5 text-black">
                 <Search className="h-6 w-6" />
               </div>
               <input
                 type="text"
-                placeholder="Search events, workshops, venues..."
+                placeholder="SEARCH EVENTS, WORKSHOPS, VENUES..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent px-4 py-4 text-lg text-foreground placeholder:text-muted-foreground focus:outline-none"
+                className="w-full bg-transparent px-4 py-5 text-lg font-black uppercase text-black placeholder:text-black/30 focus:outline-none"
               />
             </div>
           </motion.div>
@@ -96,19 +91,19 @@ export default function Home() {
         </section>
 
         {/* Results Info */}
-        <div className="mb-6 flex items-center justify-between text-sm text-muted-foreground">
-          <p>Showing <span className="font-bold text-foreground">{filteredEvents.length}</span> events</p>
+        <div className="mb-6 flex items-center justify-between text-xs font-black uppercase tracking-widest text-black/60">
+          <p>Result: <span className="text-black">{filteredEvents.length} Events</span></p>
         </div>
 
         {/* Events Grid */}
         <section className="relative min-h-[400px]">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-64 gap-4 text-muted-foreground">
-              <Compass className="h-10 w-10 animate-spin text-primary" />
-              <p className="font-medium animate-pulse">Mapping out events...</p>
+            <div className="flex flex-col items-center justify-center h-64 gap-4 text-black">
+              <Compass className="h-12 w-12 animate-spin fill-primary" />
+              <p className="font-black uppercase tracking-widest">Scanning Campus...</p>
             </div>
           ) : filteredEvents.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               <AnimatePresence mode="popLayout">
                 {filteredEvents.map((event, index) => (
                   <EventCard key={event.id} event={event} index={index} />
@@ -119,20 +114,20 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-border rounded-3xl bg-card/50"
+              className="flex flex-col items-center justify-center py-20 text-center border-4 border-black bg-white shadow-neo"
             >
-              <div className="bg-accent/50 p-4 rounded-full mb-4">
-                <Map className="h-12 w-12 text-muted-foreground" />
+              <div className="bg-primary border-3 border-black p-4 mb-4">
+                <Map className="h-12 w-12 text-black" />
               </div>
-              <h3 className="font-display text-2xl font-bold text-foreground mb-2">No events found</h3>
-              <p className="text-muted-foreground max-w-md">
-                We couldn't find any events matching "{searchQuery}" in the {selectedCategory} category. Try adjusting your filters.
+              <h3 className="font-display text-2xl font-black uppercase text-black mb-2">No results found</h3>
+              <p className="font-bold text-black/60 max-w-md uppercase tracking-wide">
+                We couldn't find any events matching "{searchQuery}" in the {selectedCategory} category.
               </p>
               <button 
                 onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
-                className="mt-6 px-6 py-2 rounded-full bg-border text-foreground hover:bg-muted transition-colors font-medium"
+                className="btn-neo mt-8"
               >
-                Clear all filters
+                Reset Search
               </button>
             </motion.div>
           )}
@@ -140,10 +135,15 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto py-8 border-t border-border/50 bg-background/50 text-center">
-        <p className="text-muted-foreground text-sm font-medium">
-          © 2026 <span className="text-foreground">Texperia Navigator</span> · SNS College of Technology
-        </p>
+      <footer className="mt-auto py-10 border-t-3 border-black bg-black text-white">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm font-black uppercase tracking-widest">
+            © 2026 <span className="text-primary">Texperia Navigator</span>
+          </p>
+          <div className="text-xs font-bold uppercase tracking-widest opacity-60">
+            SNS College of Technology
+          </div>
+        </div>
       </footer>
     </div>
   );
