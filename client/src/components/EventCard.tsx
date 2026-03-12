@@ -23,6 +23,7 @@ export function EventCard({ event, index }: EventCardProps) {
   const BLOCK_LINKS: Record<string, string> = {
     "A BLOCK": "https://maps.app.goo.gl/wkfNYer2p5i4pRwL7",
     "AI BLOCK": "https://maps.app.goo.gl/jHcfkTqt1eeuZ1F28",
+    "AI CAMPUS": "https://maps.app.goo.gl/jHcfkTqt1eeuZ1F28",
     "B BLOCK": "https://maps.app.goo.gl/wkfNYer2p5i4pRwL7",
     "C BLOCK": "https://maps.app.goo.gl/otTQcFGdP61uMC1C8",
     "D BLOCK": "https://maps.app.goo.gl/smtf5pRrtc4u2ECS7",
@@ -42,12 +43,17 @@ export function EventCard({ event, index }: EventCardProps) {
     }
   }
 
+  const handleCardClick = () => {
+    window.open(mapsUrl, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-      className="group relative"
+      className="group relative cursor-pointer"
+      onClick={handleCardClick}
     >
       {/* Card Content */}
       <div className="relative flex h-full flex-col justify-between overflow-hidden border-3 border-black bg-card p-6 shadow-neo transition-all duration-300 hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[10px_10px_0px_0px_#000000]">
@@ -86,15 +92,16 @@ export function EventCard({ event, index }: EventCardProps) {
             </div>
           </div>
 
-          <a
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
             className="btn-neo mt-2 flex w-full items-center justify-center gap-2"
           >
             Get Directions
             <ArrowRight className="h-4 w-4" />
-          </a>
+          </button>
         </div>
       </div>
     </motion.div>
