@@ -20,7 +20,27 @@ export function EventCard({ event, index }: EventCardProps) {
     }
   };
 
-  const mapsUrl = `https://www.google.com/maps?q=${event.lat},${event.lon}`;
+  const BLOCK_LINKS: Record<string, string> = {
+    "A BLOCK": "https://maps.app.goo.gl/wkfNYer2p5i4pRwL7",
+    "AI BLOCK": "https://maps.app.goo.gl/jHcfkTqt1eeuZ1F28",
+    "B BLOCK": "https://maps.app.goo.gl/wkfNYer2p5i4pRwL7",
+    "C BLOCK": "https://maps.app.goo.gl/otTQcFGdP61uMC1C8",
+    "D BLOCK": "https://maps.app.goo.gl/smtf5pRrtc4u2ECS7",
+    "DT PLAY HOUSE": "https://maps.app.goo.gl/BAaEYgHeZWC5e4gh7",
+    "VOLLEY BALL GROUND": "https://maps.app.goo.gl/pzRF5Wpb8zUSr1uk6",
+    "G BLOCK": "https://maps.app.goo.gl/3ZdHyjPBgdfNZ48g9",
+  };
+
+  // Check if venue matches any block
+  let mapsUrl = `https://www.google.com/maps?q=${event.lat},${event.lon}`;
+  const upperVenue = event.venue.toUpperCase().trim();
+  
+  for (const block in BLOCK_LINKS) {
+    if (upperVenue.includes(block)) {
+      mapsUrl = BLOCK_LINKS[block];
+      break;
+    }
+  }
 
   return (
     <motion.div
